@@ -5,6 +5,7 @@ public class Aluno {
 	private String nome;
 	private String matricula;
 	private Periodos periodo;
+	
 
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;

@@ -3,7 +3,7 @@ package br.senai.sp.jandira;
 import br.senai.sp.jandira.framegui.FrameCadastroAlunos;
 import br.senai.sp.jandira.model.Aluno;
 import br.senai.sp.jandira.model.Periodos;
-import br.senai.sp.jandira.repository.AlunoRepository;
+import br.senai.sp.jandira.repository.AlunosRepository;
 
 public class app {
 
@@ -12,6 +12,11 @@ public class app {
 
 		FrameCadastroAlunos frame = new FrameCadastroAlunos();
 		frame.setVisible(true);
+		
+		
+		
+	
+		
 		
 	}
 
