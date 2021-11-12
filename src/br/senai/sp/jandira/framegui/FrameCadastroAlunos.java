@@ -2,20 +2,26 @@ package br.senai.sp.jandira.framegui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.ListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 
 import br.senai.sp.jandira.model.Aluno;
@@ -25,8 +31,8 @@ import br.senai.sp.jandira.repository.AlunosRepository;
 public class FrameCadastroAlunos extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtmatricula;
+	private JTextField textnome;
 	private int posicao = 0;
 
 	public FrameCadastroAlunos() {
@@ -40,16 +46,18 @@ public class FrameCadastroAlunos extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		textField = new JTextField();
-		textField.setBounds(80, 71, 90, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtmatricula = new JTextField();
+		txtmatricula.setBounds(80, 71, 90, 20);
+		contentPane.add(txtmatricula);
+		txtmatricula.setColumns(10);
 
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(80, 40, 90, 20);
-		contentPane.add(textField_1);
+		textnome = new JTextField();
+		textnome.setColumns(10);
+		textnome.setBounds(80, 40, 90, 20);
+		contentPane.add(textnome);
 
+		
+	   
 		JLabel lblnome = new JLabel("Nome");
 		lblnome.setBounds(20, 43, 46, 14);
 		contentPane.add(lblnome);
@@ -57,8 +65,8 @@ public class FrameCadastroAlunos extends JFrame {
 		JLabel lblmatricula = new JLabel("Matricula");
 		lblmatricula.setBounds(20, 74, 100, 14);
 		contentPane.add(lblmatricula);
-		
-		JButton btnNewButton_1 = new JButton("fala ai");
+
+		JButton btnNewButton_1 = new JButton("Exebir");
 		btnNewButton_1.setBounds(80, 215, 89, 23);
 		contentPane.add(btnNewButton_1);
 		contentPane.setVisible(true);
@@ -71,69 +79,114 @@ public class FrameCadastroAlunos extends JFrame {
 		btnNewButton.setBounds(40, 164, 166, 33);
 		contentPane.add(btnNewButton);
 
-		JComboBox comboBox = new JComboBox();
+		JComboBox comboBoxperiodo = new JComboBox();
 		/// vectory de lista em arrey
-		DefaultComboBoxModel<String> periodomodel = new DefaultComboBoxModel<String>(dias);
+		DefaultComboBoxModel<String> periodomodel = new DefaultComboBoxModel<String>();
 
 		for (Periodos p : Periodos.values()) {
 			periodomodel.addElement(p.getdescricao());
 
 		}
-		comboBox.setModel(periodomodel);
-		comboBox.setBounds(76, 110, 86, 22);
-		contentPane.add(comboBox);
-
+		comboBoxperiodo.setModel(periodomodel);
+		comboBoxperiodo.setBounds(76, 110, 86, 22);
+		contentPane.add(comboBoxperiodo);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(255, 27, 142, 184);
+		scrollPane.setBounds(269, 40, 135, 182);
 		contentPane.add(scrollPane);
 		
+		JList listmodel = new JList(); 
+		DefaultListModel<String> ListModel = new DefaultListModel<String>();
+		listmodel.setModel(ListModel);
+
+		scrollPane.setViewportView(listmodel);
+
 		AlunosRepository turma = new AlunosRepository();
-	
-		
-		
+
 		btnNewButton.addActionListener(new ActionListener() {
+
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				Aluno aluno = new Aluno();
-				aluno.setMatricula(lblmatricula.getText());
-				aluno.setNome(lblnome.getText());
-			    turma.gravar(aluno, posicao);
+				aluno.setMatricula(txtmatricula.getText());
+				aluno.setNome(textnome.getText());
+				aluno.setPeriodo(obterperiodo(comboBoxperiodo.getSelectedIndex()));
+
+				ListModel.addElement(aluno.getNome());
 				
+				turma.gravar(aluno, posicao);
 				posicao++;
+				
+
+
+
+         if(posicao == turma.gettamanho()) {
+        	 btnNewButton.setEnabled(false);
+        	 JOptionPane.showMessageDialog(null, "A Turma se Esgoto");
+         }
+				
+				
 			}
 		});
+		
+		listmodel.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+		 
+				Aluno aluno= turma.listaraluno(listmodel.getSelectedIndex());
+				textnome.setText(aluno.getNome());
+				txtmatricula.setText(aluno.getMatricula());
+				
+				 comboBoxperiodo.setSelectedIndex(aluno.getPeriodo().ordinal());
+				
+				
+				
+			}
+		});
+		
+		
+		
 		btnNewButton_1.addActionListener(new ActionListener() {
-			
-			
+
 			public void actionPerformed(ActionEvent e) {
-				
-				for(Aluno aluno : turma.listartodos()) {
+
+				for (Aluno aluno : turma.listartodos()) {
+					System.out.println(aluno.getNome());
 					System.out.println(aluno.getMatricula());
-					System.err.println(aluno.getNome());
-					
-					
+					System.out.println(aluno.getPeriodo());
+					System.out.println("******************");
+
 				}
-				
+
 			}
 		});
 
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-
-			public int getSize() {
-				return values.length;
-			}
-
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		
-		
-		scrollPane.setViewportView(list);
-		
 	
+			
+			
+			
+		
+
+	}
+
+	private Periodos obterperiodo(int periodoselect) {
+
+		// para descobrir o periodod do aluno
+
+		if (periodoselect == 0) {
+			return (Periodos.MANHA);
+		} else if (periodoselect == 1) {
+			return (Periodos.NOITE);
+		} else if (periodoselect == 2) {
+			return (Periodos.TARDE);
+		} else if (periodoselect == 3) {
+			return (Periodos.SABADO);
+		} else {
+			return (Periodos.ONLINE);
+		}
+
 	}
 }

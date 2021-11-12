@@ -1,24 +1,24 @@
 package br.senai.sp.jandira.model;
+
 //eneum
 public enum Periodos {
 
-	
-	 MANHA("MANHÃ"),
-	 TARDE("TARDE"),
-     NOITE("NOITE");
-	
-	private Periodos (String descriçao) { 
-	
-	
-	
+	MANHA("Manhã"), 
+	TARDE("Tarde"), 
+	NOITE("Noite"),
+	SABADO("Sabado"), 
+	ONLINE("Online");
+
+	private Periodos(String descriçao) {
+     this.descricao = descriçao; 	
+		
 	}
-	
+
 	private String descricao;
-     
-     public String getdescricao() {
-    	 return descricao;
-    	 
-     }
-     
-	
+
+	public String getdescricao() {
+		return descricao;
+
+	}
+
 }

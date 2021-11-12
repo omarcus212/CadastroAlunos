@@ -30,4 +30,8 @@ public class AlunosRepository {
 	public Aluno[] listartodos(){
 		return turma;
 	}
+	
+	public int gettamanho() {
+		return turma.length; 
+	}
 }
