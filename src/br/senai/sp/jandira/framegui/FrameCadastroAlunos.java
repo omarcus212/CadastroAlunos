@@ -116,8 +116,6 @@ public class FrameCadastroAlunos extends JFrame {
 
 				ListModel.addElement(aluno.getNome());
 				
-				turma.gravar(aluno, posicao);
-				posicao++;
 				
 
 
